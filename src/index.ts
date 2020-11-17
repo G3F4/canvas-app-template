@@ -25,12 +25,19 @@ addEventListener('resize', () => {
   canvas.height = innerHeight;
 });
 
+const particleMaxRadius = 5;
+const particleCount = (innerWidth * innerHeight) / 200;
+const particleRadiusGrowSpeed = 0.3;
+const particlePhases = ['grow', 'shrink'] as const;
+const particles: Particle[] = [];
+
 class Particle {
   constructor(
     private x: number,
     private y: number,
     private radius: number,
     private color: string | CanvasGradient | CanvasPattern,
+    private phase: 'grow' | 'shrink',
   ) {}
 
   draw() {
@@ -42,7 +49,28 @@ class Particle {
   }
 
   update() {
+    this.lifeCycle();
     this.draw();
+  }
+
+  lifeCycle() {
+    if (this.phase === 'grow') {
+      this.radius += particleRadiusGrowSpeed;
+
+      if (this.radius > particleMaxRadius) {
+        this.phase = 'shrink';
+      }
+    }
+
+    if (this.phase === 'shrink') {
+      this.radius -= particleRadiusGrowSpeed;
+
+      if (this.radius < 0) {
+        this.radius = 0;
+        this.phase = 'grow';
+        this.randomPosition();
+      }
+    }
   }
 
   randomPosition() {
@@ -51,18 +79,15 @@ class Particle {
   }
 }
 
-const particles: Particle[] = [];
-
 function createParticles() {
-  const particleCount = (innerWidth * innerHeight) / 100;
-
   for (let i = 0; i < particleCount; i++) {
     particles.push(
       new Particle(
         randomIntFromRange(0, innerWidth),
         randomIntFromRange(0, innerHeight),
-        randomIntFromRange(0, 5 % i),
+        randomIntFromRange(0, particleMaxRadius % i),
         'red',
+        particlePhases[randomIntFromRange(0, 1)],
       ),
     );
   }
