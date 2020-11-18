@@ -1,7 +1,7 @@
 import { randomIntFromRange } from '../utils/array';
 
 export const particlePhases = ['grow', 'shrink'] as const;
-export const particleMaxRadius = 5;
+export const particleMaxRadius = 10;
 export const particleMoveRandomness = 3;
 export const particleRadiusGrowSpeed = 0.3;
 

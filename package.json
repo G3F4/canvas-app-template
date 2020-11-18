@@ -1,7 +1,7 @@
 {
   "name": "canvas-game-template",
   "description": "Template for game project built using HTML canvas",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "src/index.ts",
   "scripts": {
     "start": "webpack serve",

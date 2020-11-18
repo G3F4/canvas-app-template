@@ -10,15 +10,21 @@ import {
   getDrawingContext,
   getMousePosition,
   registerClickHandler,
+  registerResizeHandler,
 } from './utils/appWindow';
 import getTextPrinter from './utils/getTextPrinter';
 
-const particleCount = (innerWidth * innerHeight) / 100;
-const particles: Particle[] = [];
+const fps = 24;
+const particleCount = Math.hypot(innerWidth, innerHeight);
+let particles = createParticles();
+
+appLoop({ fps, onFrame: logic });
 
 function createParticles() {
+  const items: Particle[] = [];
+
   for (let i = 0; i < particleCount; i++) {
-    particles.push(
+    items.push(
       new Particle(
         randomIntFromRange(0, innerWidth),
         randomIntFromRange(0, innerHeight),
@@ -28,10 +34,16 @@ function createParticles() {
       ),
     );
   }
+
+  return items;
 }
 
 function randomizeParticles() {
   particles.forEach((particle) => particle.randomPosition());
+}
+
+function recreateParticles() {
+  particles = createParticles();
 }
 
 function logic({ currentFps }: { currentFps: number }) {
@@ -53,10 +65,5 @@ function logic({ currentFps }: { currentFps: number }) {
   });
 }
 
-createParticles();
-
 registerClickHandler(randomizeParticles);
-
-const fps = 12;
-
-appLoop({ fps, onFrame: logic });
+registerResizeHandler(recreateParticles);

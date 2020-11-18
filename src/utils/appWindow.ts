@@ -24,6 +24,12 @@ export function registerClickHandler(handler: () => void): void {
   addEventListener('click', handler);
 }
 
+export function registerResizeHandler(handler: () => void): void {
+  addEventListener('resize', () => {
+    setTimeout(handler, 100);
+  });
+}
+
 export function getMousePosition(): Point {
   return mouse;
 }
