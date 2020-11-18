@@ -1,4 +1,6 @@
-import { randomIntFromRange } from './utils';
+import { randomIntFromRange } from './utils/array';
+import appLoop from './utils/appLoop';
+import { randomRgba } from './utils/color';
 
 const canvas = document.querySelector('canvas') as HTMLCanvasElement;
 const c = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -26,7 +28,7 @@ addEventListener('resize', () => {
 });
 
 const particleMaxRadius = 5;
-const particleCount = (innerWidth * innerHeight) / 200;
+const particleCount = (innerWidth * innerHeight) / 100;
 const particleRadiusGrowSpeed = 0.3;
 const particlePhases = ['grow', 'shrink'] as const;
 const particles: Particle[] = [];
@@ -86,7 +88,7 @@ function createParticles() {
         randomIntFromRange(0, innerWidth),
         randomIntFromRange(0, innerHeight),
         randomIntFromRange(0, particleMaxRadius % i),
-        'red',
+        randomRgba(),
         particlePhases[randomIntFromRange(0, 1)],
       ),
     );
@@ -97,15 +99,19 @@ function randomizeParticles() {
   particles.forEach((particle) => particle.randomPosition());
 }
 
-function animate() {
-  requestAnimationFrame(animate);
+function logic({ currentFps }: { currentFps: number }) {
   c.clearRect(0, 0, canvas.width, canvas.height);
 
-  c.fillText('CANVAS GAME BOILERPLATE', mouse.x, mouse.y);
   particles.forEach((object) => {
     object.update();
   });
+
+  c.fillStyle = 'black';
+  c.fillText(`FPS: ${currentFps}`, 0, 10);
 }
 
 createParticles();
-animate();
+
+const fps = 24;
+
+appLoop({ fps, onFrame: logic });
