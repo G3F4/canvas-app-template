@@ -1,14 +1,15 @@
 import { randomIntFromRange } from '../utils/array';
+import Point, { distance } from '../models/Point';
 
 export const particlePhases = ['grow', 'shrink'] as const;
 export const particleMaxRadius = 10;
 export const particleMoveRandomness = 3;
 export const particleRadiusGrowSpeed = 0.3;
 
-export default class Particle {
+export default class Particle implements Point {
   constructor(
-    private x: number,
-    private y: number,
+    public x: number,
+    public y: number,
     private radius: number,
     private color: string | CanvasGradient | CanvasPattern,
     private phase: 'grow' | 'shrink',
@@ -22,9 +23,12 @@ export default class Particle {
     ctx.closePath();
   }
 
-  update(ctx: CanvasRenderingContext2D): void {
+  update(props: { ctx: CanvasRenderingContext2D; mouse: Point }): void {
+    const { ctx, mouse } = props;
+
     this.lifeCycle();
-    this.randomMove();
+    this.move();
+    this.checkCollisionWithMouse(mouse);
     this.draw(ctx);
   }
 
@@ -39,7 +43,7 @@ export default class Particle {
     }
 
     if (this.phase === 'shrink') {
-      this.radius -= particleRadiusGrowSpeed;
+      this.radius -= Math.pow(particleRadiusGrowSpeed, 3);
 
       if (this.radius < 0) {
         this.radius = 0;
@@ -49,7 +53,13 @@ export default class Particle {
     }
   }
 
-  randomMove(): void {
+  checkCollisionWithMouse(mouse: Point): void {
+    if (distance(this, mouse) < 100) {
+      this.radius += particleRadiusGrowSpeed;
+    }
+  }
+
+  move(): void {
     this.x += randomIntFromRange(
       -particleMoveRandomness,
       particleMoveRandomness,

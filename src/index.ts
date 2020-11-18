@@ -47,14 +47,14 @@ function recreateParticles() {
 }
 
 function logic({ currentFps }: { currentFps: number }) {
-  const context = getDrawingContext();
+  const ctx = getDrawingContext();
   const mouse = getMousePosition();
-  const textPrinter = getTextPrinter(context);
+  const textPrinter = getTextPrinter(ctx);
 
   clearDrawingArea();
 
   particles.forEach((object) => {
-    object.update(context);
+    object.update({ ctx, mouse });
   });
 
   textPrinter({ text: `FPS: ${currentFps}`, position: { x: 0, y: 10 } });
