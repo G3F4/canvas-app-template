@@ -1,7 +1,7 @@
 {
-  "name": "canvas-game-template",
-  "description": "Template for game project built using HTML canvas",
-  "version": "1.2.0",
+  "name": "canvas-app-template",
+  "description": "Template for building application using HTML canvas and TypeScript",
+  "version": "1.2.1",
   "main": "src/index.ts",
   "scripts": {
     "start": "webpack serve",
@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com//G3F4/canvas-game-template.git"
+    "url": "https://github.com//G3F4/canvas-app-template.git"
   },
   "keywords": [
     "HTML",
@@ -46,7 +46,6 @@
     "canvas",
     "JavaScript",
     "TypeScript",
-    "game",
     "template"
   ],
   "author": "G3F4",
